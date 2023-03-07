@@ -1,0 +1,200 @@
+
+
+   The data-source class template provides means for one-way transfer of
+   fixed-size data items from one object -- the "producer" -- to several others,
+   the "consumers".
+
+   In the default setting, the producer inherits from a DataSource<...> class.
+   It is also possible for the producer to contain a data-source object as its
+   member instead, in which case it is necessary to make an intermediate stub
+   class, which will be explained below. In either case, it is the producer that
+   owns the data and has exclusive write access to it, and the consumers ask to 
+   read it. Hence the naming: when it inherits from DataSource<...>, the producer
+   becomes a source of data for the rest of the world.
+
+
+   THE POLICY OF USAGE
+
+   Let's say there are two objects, named "producerA", "producerB", and a number
+   of consumers who need to read from both producers. Let's assume that the
+   producer objects inherit from the data-source class.
+
+   The pipeline is assembled when all the participants have declared where they
+   want to read from. Each consumer should do this:
+
+      uint8_t tokenA = producerA.registerDataSource();
+      uint8_t tokenB = producerB.registerDataSource();
+
+   It should keep the two tokens for as long as it participates in the pipeline.
+
+   When the list of readers of a particular object needs to be changed, readers
+   can unregister using
+
+      producerA.unregisterDataSource(3);
+
+   which removes the three latest readers from producerA's list. An invocation
+
+      producerB.unregisterDataSource();
+   
+   removes all producerB's readers from the list.
+
+
+   =======[ The Producer's Side ]=============================================
+
+   Once the producer has some fresh data to pass on, it must do the following:
+
+   1) Close the buffer in order to have exclusive write access:
+
+      closeDataSource();
+
+   2) Find out the remaining free space in the buffer, by calling dataSourceFree() 
+   method:
+
+      uint32_t available = dataSourceFree();
+
+   which returns the number of new items that can be put in the buffer. 
+
+   The reason why closeDataSource() and dataSourceFree() are separate methods:
+
+   In one writing session (i.e. between a closeDataSource() and an open() call) the
+   owner of the buffer may do a series of individual write operations; if it 
+   needs to check the remaining free space before an individual action, it can
+   do so by invoking dataSourceFree(), e.g. in a loop of a form 
+
+      while ( dataSourceFree() > 0 ) { ... }
+
+   unlike closeDataSource(), which of course may be invoked only once.
+
+   3) Data items can then be placed in the buffer by one of the putData() methods:
+
+      putData(newDataItem) 	-- adds a single item to the buffer;
+
+      putData(pDataArray, 0x80) -- adds the specified number of items
+         			   from the memory location pointed to by 
+				   "pDataArray";
+
+      putData(pSrcFile, 0x8C0) 	-- adds the specified number of items
+				   from the file pointed to by "pSrcFile";
+
+      putNullData(nZeroItems)	-- adds the specified number of "empty" 
+         			   items, i.e. zero-filled fields, each 
+				   the size of a data item;
+
+   When writing, the producer object must take care not to exceed the number of
+   items returned by the dataSourceFree() method.
+
+   4) Check if there will be more data; once the producer knows there will be
+   none, it should invoke
+
+      setDataSourceFinished();
+
+   5) Open the buffer in order to allow others to read from it:
+
+      open();
+
+
+   =======[ The Consumer's Side ]=============================================
+
+   The consumer must do the following:
+
+   1) Each time it wants to start reading a new portion of produced data, the 
+   consumer must become the unique active reader of both producers by calling 
+   the method startDataSource():
+
+      uint32_t itemsA = producerA.startDataSource(tokenA);
+      uint32_t itemsB = producerB.startDataSource(tokenB);
+
+   Now the variables itemsA and itemsB hold the number of data items ahead of
+   the "current" position (which is always restored from the previous reading)
+   respectively in producerA and producerB.
+
+   2) If the values of the items ahead show that there are no new data items
+   since the end of the previous reading, consumer1 should check if new data
+   are still expected via
+
+      if ( producerA.dataSourceFinished() ) { ... }
+      if ( producerB.dataSourceFinished() ) { ... }
+
+   3) The consumer can read from a producer by the following methods:
+
+      newItem = producerA[5];		-- Take the fifth item starting from the
+					   current one.
+
+      newItem = producerB.getData();	-- Take the current item.
+
+      producerA.getData(pDataArray, 0xC00);
+					-- Take the specified number of items
+					   and place them to the memory location
+					   pointed to by "pDataArray".
+
+      producerA.getData(pDataArray);	-- Take all the remaining items
+					   and place them to the memory location
+					   pointed to by "pDataArray".
+
+      producerB.getData(pDestFile, 0x30);
+					-- Take the specified number of items
+					   and place them to the file pointed
+					   to by "pDestFile".
+
+      producerB.getData(pDestFile);	-- Take all the remaining items
+					   and place them to the file pointed
+					   to by "pDestFile".
+
+   Any consumer object must take care not to exceed the values returned by the
+   producer's startDataSource() method when reading from a producer.
+
+   All five getData() methods advance the "current" marker by the number of items
+   read. So, note that both producerB[0] and producerB.getData() return the current
+   data item, but the latter method also advances the "current" position by one.
+
+   4) If necessary, the "current" marker can be rewound, or advanced, by the
+   dataSourceShift() method, e.g.
+
+      producerA.dataSourceShift(-0x30); producerB.dataSourceShift(8);
+
+   Again, care must be taken not to overstep the borders of the filled area.
+
+   5) When done reading, the consumer object must release the producer, so that
+   others can read from it, by calling the stopDataSource() method. The consumer
+   specifies how many data items it doesn't need any more:
+
+      producerA.stopDataSource(unneededA); producerB.stopDataSource(unneededB);
+
+   The argument may be skipped, in which case the entire contents of the buffer
+   is marked for disposal. The actual change in the buffer of producerA occurs
+   only when all its readers have called their stopDataSource() method, and then
+   the smallest requested amount is actually discarded.
+
+
+   PERMISSIBLE TYPES OF DATA ITEMS
+
+   ... to be written ...
+
+
+
+
+   HEADERS AND MAKEFILE DIRECTIVES
+
+   ... to be written ...
+
+
+   THE CASE WHERE THE PRODUCER CONTAINS A DATA-SOURCE OBJECT AS ITS MEMBER
+
+   ... to be written ...
+
+
+   ON THE IMPLEMENTATION
+
+   The core of a data-source object is a circular buffer receiving a power-of-two
+   data items. The currently filled area of the buffer starts from the data-item
+   marked as the "tail", and extends forward to the last data item, the position
+   after which is called the "head". Within this area there is the data-item
+   from which the next read operation will start, marked as "current".
+
+   ... to be expanded ...
+
+
+   EXCEPTIONS
+
+   ... to be written ...
+   
