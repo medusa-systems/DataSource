@@ -1,8 +1,9 @@
 
-S            = ${HOME}/dshello
+S            = ${HOME}/datasource
+E            = $(S)/examples
 CXX_OPTS     = -std=c++20 -O2
 DEFINES      = -DVERBOSE_DATA_SOURCE
-INCLUDE_DIRS = -I$(S) 
+INCLUDE_DIRS = -I$(S) -I$(E)
 
 OBJECTS = SoundSource.o DataSourceException.o Channel.o Container.o processing.o main.o
 
@@ -16,20 +17,20 @@ all: dshello
 dshello: $(OBJECTS) 
 	g++ $(OBJECTS) $(LINK_LIBS) -o dshello 
 
-main.o: $(S)/main.cpp $(S)/processing.hpp $(S)/dshello.hpp 
-	g++ $(CXX_OPTS) $(INCLUDE_DIRS) $(DEFINES) $(S)/main.cpp -c -o main.o 
+main.o: $(E)/main.cpp $(E)/processing.hpp $(E)/dshello.hpp 
+	g++ $(CXX_OPTS) $(INCLUDE_DIRS) $(DEFINES) $(E)/main.cpp -c -o main.o 
 
-processing.o: $(S)/processing.cpp $(S)/processing.hpp $(S)/Channel.hpp $(S)/Container.hpp $(S)/dshello.hpp 
-	g++ $(CXX_OPTS) $(INCLUDE_DIRS) $(DEFINES) $(S)/processing.cpp -c -o processing.o 
+processing.o: $(E)/processing.cpp $(E)/processing.hpp $(E)/Channel.hpp $(E)/Container.hpp $(E)/dshello.hpp 
+	g++ $(CXX_OPTS) $(INCLUDE_DIRS) $(DEFINES) $(E)/processing.cpp -c -o processing.o 
 
-Channel.o: $(S)/Channel.cpp $(S)/Channel.hpp $(S)/SoundSource.hpp $(S)/dshello.hpp
-	g++ $(CXX_OPTS) -Wno-unused-result $(INCLUDE_DIRS) $(DEFINES) $(S)/Channel.cpp -c -o Channel.o 
+Channel.o: $(E)/Channel.cpp $(E)/Channel.hpp $(E)/SoundSource.hpp $(E)/dshello.hpp
+	g++ $(CXX_OPTS) -Wno-unused-result $(INCLUDE_DIRS) $(DEFINES) $(E)/Channel.cpp -c -o Channel.o 
 
-Container.o: $(S)/Container.cpp $(S)/Container.hpp $(S)/SoundSource.hpp $(S)/dshello.hpp
-	g++ $(CXX_OPTS) $(INCLUDE_DIRS) $(DEFINES) $(S)/Container.cpp -c -o Container.o 
+Container.o: $(E)/Container.cpp $(E)/Container.hpp $(E)/SoundSource.hpp $(E)/dshello.hpp
+	g++ $(CXX_OPTS) $(INCLUDE_DIRS) $(DEFINES) $(E)/Container.cpp -c -o Container.o 
 
-SoundSource.o: $(S)/SoundSource.cpp $(S)/SoundSource.hpp $(S)/DataSource.hpp $(S)/dshello.hpp
-	g++ $(CXX_OPTS) -Wno-unused-result $(INCLUDE_DIRS) $(DEFINES) $(S)/SoundSource.cpp -c -o SoundSource.o 
+SoundSource.o: $(E)/SoundSource.cpp $(E)/SoundSource.hpp $(S)/DataSource.hpp $(E)/dshello.hpp
+	g++ $(CXX_OPTS) -Wno-unused-result $(INCLUDE_DIRS) $(DEFINES) $(E)/SoundSource.cpp -c -o SoundSource.o 
 
 DataSourceException.o: $(S)/DataSourceException.cpp $(S)/DataSourceException.hpp 
 	g++ $(CXX_OPTS) $(INCLUDE_DIRS) $(DEFINES) $(S)/DataSourceException.cpp -c -o DataSourceException.o 
