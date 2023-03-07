@@ -27,7 +27,8 @@ int main(int argc, char **argv)
    // Initialize input/output.
    setlocale(LC_ALL, "en_US.utf8");
 
-   try {
+   try 
+   {
 
       list<string> fileNames = { };
  
@@ -37,7 +38,9 @@ int main(int argc, char **argv)
       }
       else puts("No input file.");
       
-   } catch (exception & e) {
+   }
+   catch (exception & e) 
+   {
 
       // A major TODO: reporting exceptions.
 
