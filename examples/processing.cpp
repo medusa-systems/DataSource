@@ -75,12 +75,12 @@ loadFile(const char * fileName)
 
 	 for (auto ch = d->begin(); ch != d->end(); ch++) 
 	 { 
-            DBG_MSG(loadFile, "\t\t\t--> Starting filling the input_sound of %s with %d samples...", 
+            DBG_MSG(loadFile, "\t\t\t--> Starting filling %s with %d samples...", 
 	    						ch->name().data(), c->amount());
 	    // PIPELINE00 NODE1 Operated from here (we consider a channel the receiver)...
 	    samplesAdded = ch->write(); 
             if ( samplesAdded ) 
-               DBG_MSG(loadFile, "\t\t\tThe input_sound of %s filled.", ch->name().data());
+               DBG_MSG(loadFile, "\t\t\t%s filled.", ch->name().data());
 	 }
  
          frames_decoded += samplesAdded;
