@@ -4,6 +4,22 @@
 #include <DataSource.hpp>
 #include <processing.hpp>
 
+
+//**********************************************************************************************
+
+void printFinalMessage()
+{
+   DBG_MSG(main, "");
+   DBG_MSG(main, "\t\t\t##############################################################################");
+   DBG_MSG(main, "");
+   DBG_MSG(main, "\t\t\tThat's all, folks.");
+   DBG_MSG(main, "\t\t\tThe file has been loaded, each channel ending in a separate storage; ");
+   DBG_MSG(main, "\t\t\tright now, that's all we've got as an illustration of DataSource's operation.");
+   DBG_MSG(main, "\t\t\tStay tuned, and meanwhile you can examine the code; even though this is the");
+   DBG_MSG(main, "\t\t\tvery basic usage, all the essential stuff concerning a single reader is there.");
+}
+
+
 //**********************************************************************************************
 
 int main(int argc, char **argv)
@@ -15,7 +31,10 @@ int main(int argc, char **argv)
 
       list<string> fileNames = { };
  
-      if ( optind < argc ) loadFile(argv[optind]);
+      if ( optind < argc ) 
+      {
+         if ( loadFile(argv[optind]) ) printFinalMessage();
+      }
       else puts("No input file.");
       
    } catch (exception & e) {
@@ -24,15 +43,6 @@ int main(int argc, char **argv)
 
       return -1;
    }
-
-   DBG_MSG(main, "");
-   DBG_MSG(main, "\t\t\t##############################################################################");
-   DBG_MSG(main, "");
-   DBG_MSG(main, "\t\t\tThat's all, folks.");
-   DBG_MSG(main, "\t\t\tThe file has been loaded, each channel ending in a separate storage; ");
-   DBG_MSG(main, "\t\t\tright now, that's all we've got as an illustration of DataSource's operation.");
-   DBG_MSG(main, "\t\t\tStay tuned, and meanwhile you can examine the code; even though this is the");
-   DBG_MSG(main, "\t\t\tvery basic usage, all the essential stuff concerning a single reader is there.");
 
    return 0;
 
