@@ -13,7 +13,7 @@ void printFinalMessage()
    DBG_MSG(main, "\t\t\t##############################################################################");
    DBG_MSG(main, "");
    DBG_MSG(main, "\t\t\tThat's all, folks.");
-   DBG_MSG(main, "\t\t\tThe file has been loaded, each channel ending in a separate storage; ");
+   DBG_MSG(main, "\t\t\tThe file has been loaded, each channel ending up in a separate storage; ");
    DBG_MSG(main, "\t\t\tright now, that's all we've got as an illustration of DataSource's operation.");
    DBG_MSG(main, "\t\t\tStay tuned, and meanwhile you can examine the code; even though this is the");
    DBG_MSG(main, "\t\t\tvery basic usage, all the essential stuff concerning a single reader is there.");
