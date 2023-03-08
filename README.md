@@ -4,7 +4,7 @@ It supports multiple readers of a buffer, reading and writing blocks of data,
 and moving back and forth during reading.
 
 ## At a Glance 
-It is a class template, DataSource\<T\>, where T is the type of data items being
+There is a class template, DataSource\<T\>, where T is the type of data items being
 passed from one object to another. An object that needs to participate in a data
 pipeline should inherit from a specialized class (e.g. DataSource\<float\>)
 and so become a "data source". Then it gets the exclusive write access to the
