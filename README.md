@@ -6,16 +6,17 @@ and moving back and forth during reading.
 ## At a Glance 
 It is a class template, DataSource\<T\>, where T is the type of data items being
 passed from one object to another. An object that needs to participate in a data
-pipeline should inherit from a specialized class (e.g. DataSource\<float\>) and
-so become a "data source". Then it gets the exclusive write access to the buffer,
-whereas any other object may register as a reader. The buffer is supposed to be
-operated in a loop, where a writing session is followed by reading sessions, one
-for each reader; this scheduling is the responsibility of the calling functions.
+pipeline should inherit from a specialized class (e.g. DataSource\<float\>)
+and so become a "data source". Then it gets the exclusive write access to the
+buffer, whereas any other object may register as a reader. The buffer is supposed
+to be operated in a loop, where in each cycle a writing session is followed by
+reading sessions, one for each reader. This scheduling is the responsibility of
+the calling functions.
 
 ## The Manual
-All the details about gaining access, querying for free and occupied space,
-reading, writing, releasing space, and about the possible exceptions are explained
-in the file DataSourceUsage.txt.
+Full instructions on gaining access, querying for free and occupied space,
+reading, writing, releasing space, and catching the exceptions are given in
+the file **DataSourceUsage.txt**.
 
 ## How to Incorporate it
 Practically, using this solution entails adding three files to one's application
