@@ -19,12 +19,12 @@ reading, writing, releasing space, and catching the exceptions are given in
 the file **DataSourceUsage.txt**.
 
 ## How to Incorporate it
-Practically, using this solution entails adding three files to one's application
--- the template DataSource.hpp and two auxiliary files, DataSourceException.cpp
-and DataSourceException.hpp; including the template header in each file where
-DataSource methods are used; and furthermore adding a couple of directives
-to the Makefile (or any prototype of it, such as CMakeLists.txt) -- one for
-DataSourceException class and one for each specialized DataSource class. This
+Practically, using this solution entails adding three files to one's application --
+the template DataSource.hpp and two auxiliary files, DataSourceException.cpp and
+DataSourceException.hpp; putting an include directive for the template header in
+each file where DataSource methods are used; and furthermore adding a couple of
+directives to the Makefile (or any prototype of it, such as CMakeLists.txt) -- one
+for DataSourceException class and one for each specialized DataSource class. This
 is also explained in the manual, and can be seen in the included example.
 
 ## Requirements
