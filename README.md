@@ -29,12 +29,12 @@ is also explained in the manual.
 Any GCC version supporting the C++20 standard will do. 
 
 ## Examples
-For the time being, there is only one packaged example, a skeletal program
-that reads an uncompressed sound file (such as .wav, .au, or .aiff) and stores
-its contents in the most simple-minded manner in the main memory, using in the
-process one DataSource circular buffer for each channel. Despite its simplicity,
-however, it does employ most actions of the single-reader scenario. The program
-depends on libsndfile.
+For the time being, there is only one packaged example -- dshello -- a skeletal
+program that reads an uncompressed sound file (such as .wav, .au, or .aiff)
+and stores its contents in the most simple-minded manner in the main memory,
+using in the process one DataSource circular buffer for each channel. Despite
+its simplicity, however, it does exemplify most actions of the single-reader
+scenario. The example additionally depends on libsndfile.
 
 Much more illustrative examples are to come.
 
